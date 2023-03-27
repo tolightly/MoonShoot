@@ -7,12 +7,13 @@
 
 import SwiftUI
 
+struct CrewMember {
+    let role: String
+    let astronaut: Astronaut
+}
+
 struct MissionView: View {
-    
-    struct CrewMember {
-        let role: String
-        let astronaut: Astronaut
-    }
+
     
     let mission: Mission
     let crew: [CrewMember]
@@ -25,6 +26,8 @@ struct MissionView: View {
                         .resizable()
                         .scaledToFit()
                         .frame(maxWidth: geometry.size.width * 0.6)
+                    
+                    Text(mission.launchDate?.formatted(date: .long, time: .omitted) ?? "N/A")
                     
                     VStack(alignment: .leading) {
                         Rectangle()
@@ -48,33 +51,7 @@ struct MissionView: View {
                         .font(.title.bold())
                         .padding(.bottom, 5)
                     
-                    ScrollView(.horizontal, showsIndicators: false) {
-                        HStack {
-                            ForEach(crew, id: \.role) { member in
-                                NavigationLink {
-                                    AstronautView(astronaut: member.astronaut)
-                                } label: {
-                                    Image(member.astronaut.id)
-                                        .resizable()
-                                        .frame(width: 104, height: 72)
-                                        .clipShape(Capsule())
-                                        .overlay(
-                                        Capsule()
-                                            .strokeBorder(.white, lineWidth: 2)
-                                        )
-                                    
-                                    VStack(alignment: .leading) {
-                                        Text(member.astronaut.name)
-                                            .font(.headline)
-                                            .foregroundColor(.white)
-                                        Text(member.role)
-                                            .foregroundColor(.secondary)
-                                    }
-                                }
-                                .padding(.horizontal)
-                            }
-                        }
-                    }
+                    CrewView(crew: crew)
                 }
                 .padding(.bottom)
             }

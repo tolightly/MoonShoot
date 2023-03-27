@@ -1,26 +1,21 @@
 //
-//  ContentView.swift
+//  ListView.swift
 //  MoonShoot
 //
-//  Created by Denys Nazymok on 25.03.2023.
+//  Created by Denys Nazymok on 27.03.2023.
 //
 
 import SwiftUI
 
-struct ContentView: View {
-    let astronauts: [String: Astronaut] = Bundle.main.decode("astronauts.json")
-    let missions: [Mission] = Bundle.main.decode("missions.json")
-    let columns = [
-        GridItem(.adaptive(minimum: 150))
-    ]
-    
-    var body: some View {
-        NavigationView {
-            ScrollView {
-                LazyVGrid(columns: columns) {
-                    ForEach(missions) { mission in
+struct ListView: View {
+    let dataController = DataController()
+    @Binding var isToggle: Bool
+        
+        var body: some View {
+            List {
+                    ForEach(dataController.missions) { mission in
                         NavigationLink {
-                            MissionView(mission: mission, astronauts: astronauts)
+                            MissionView(mission: mission, astronauts: dataController.astronauts)
                         } label: {
                             VStack {
                                 Image("\(mission.image)")
@@ -45,21 +40,25 @@ struct ContentView: View {
                             .overlay(
                                 RoundedRectangle(cornerRadius: 10)
                                     .stroke(.lightBackground)
-                                )
+                            )
                         }
                     }
                 }
-                .padding([.horizontal, .bottom])
+                .toolbar {
+                    Button {
+                        withAnimation {
+                            isToggle.toggle()
+                        }
+                    } label: {
+                        
+                        Image(systemName: "rectangle.grid.2x2")
+                    }
+                }
             }
-            .navigationTitle("MoonShoot")
-            .background(.darkBackground)
-            .preferredColorScheme(.dark)
-        }
-    }
 }
 
-struct ContentView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentView()
-    }
-}
+//struct ListView_Previews: PreviewProvider {
+//    static var previews: some View {
+//        ListView()
+//    }
+//}
